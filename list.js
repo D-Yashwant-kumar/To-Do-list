@@ -2,6 +2,8 @@ const userName=localStorage.getItem("name");
 const btn = document.querySelector("button");
 const task= document.querySelector(".add");
 const listicon= document.querySelector(".added-tasks ul");
+const progressCount = document.querySelector("#progress");
+const doneCount= document.querySelector("#done");
 
 
 let updatedName=document.querySelector(".name p");
@@ -39,6 +41,8 @@ addTask=(taskText)=>{
             icon.addEventListener("click",()=>{
                 li.remove();
                 savedata();
+                updateProgress();
+   
             })
         }else if(icon.className=== "fa-solid fa-pen-to-square"){
             icon.addEventListener("click",()=>{
@@ -48,14 +52,32 @@ addTask=(taskText)=>{
                     savedata();
                 }
             })
+        } else if(icon.className==="fa-regular fa-circle-check"){
+            icon.addEventListener("click",()=>{
+                taskSpan.classList.toggle("completed");
+                updateProgress();
+            })
         }
 })
     
             
     li.appendChild(iconDiv);
     listicon.appendChild(li);
+    updateProgress();
    
         }
+
+
+    let updateProgress =()=>{
+        const totalTask= listicon.querySelectorAll("li").length;
+        const completedTask=listicon.querySelectorAll("li span.completed").length;
+        const remainingTask= totalTask - completedTask;
+
+        progressCount.innerHTML= `To do on progress ${remainingTask}`;
+        doneCount.innerHTML= `To do done ${completedTask}`;
+    }
+
+    updateProgress();
 
 
        const savedata = () => {
@@ -64,6 +86,7 @@ addTask=(taskText)=>{
         listItems.forEach((li) => {
             tasks.push({
                 text: li.querySelector("span").textContent,
+                completed: li.querySelector("span").classList.contains("completed")
             });
         });
     
@@ -75,8 +98,13 @@ addTask=(taskText)=>{
         if (savedTasks) {
             savedTasks.forEach((task) => {
                 addTask(task.text); 
+                const lastAddedTask = listicon.lastChild;
+                if(task.completed){
+                    lastAddedTask.querySelector("span").classList.add("completed");
+                }
             });
         }
+        updateProgress();
     };
 
     
