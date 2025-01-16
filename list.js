@@ -46,12 +46,25 @@ addTask=(taskText)=>{
             })
         }else if(icon.className=== "fa-solid fa-pen-to-square"){
             icon.addEventListener("click",()=>{
-                const newText= prompt("edit the text:", taskSpan.textContent);
-                if(newText !== null && newText.trim() !== ""){
-                    taskSpan.textContent = newText.trim();
-                    savedata();
+                const currentText = taskSpan.textContent;
+                const input = document.createElement("input");
+                input.className = "newEdit";
+                input.type = "text";
+                input.value = currentText;
+                taskSpan.replaceWith(input);
+
+                input.addEventListener("blur", ()=>{
+                    saveEditedText(input, taskSpan);
+                });
+
+                input.addEventListener("keydown", (event)=>{
+                    if(event.key==="Enter"){
+                        saveEditedText(input, taskSpan)
+                    }
+                })
+                savedata();
                 }
-            })
+            )
         } else if(icon.className==="fa-regular fa-circle-check"){
             icon.addEventListener("click",()=>{
                 taskSpan.classList.toggle("completed");
@@ -65,6 +78,15 @@ addTask=(taskText)=>{
     listicon.appendChild(li);
     updateProgress();
    
+        }
+
+        const saveEditedText = (input, taskSpan)=>{
+            const newText = input.value.trim();
+            if(newText){
+                taskSpan.textContent = newText;
+            }
+            input.replaceWith(taskSpan);
+            savedata();
         }
 
 
