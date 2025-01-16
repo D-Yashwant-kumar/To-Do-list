@@ -48,7 +48,7 @@ addTask=(taskText)=>{
             icon.addEventListener("click",()=>{
                 const currentText = taskSpan.textContent;
                 const input = document.createElement("input");
-                input.className = "newEdit";
+                input.className = "newEdit"
                 input.type = "text";
                 input.value = currentText;
                 taskSpan.replaceWith(input);
